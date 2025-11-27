@@ -1,5 +1,6 @@
 <html>
 	<head>
+		<title>Workout timer</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<style>
 			.screenBlock{
@@ -16,9 +17,11 @@
 		</style>
 	</head>
 	<body style="color:#ffffff;background:#202020;font:24px Tahoma">
-		<div id="configDiv" style="display:block" class="screenBlock">
-			3 segundos / 10 veces / 3 pausa <span class="buttonStart" onclick="setupTimer(3, 10, 3)">timer</span><br>
+		<div id="configDiv" style="display:block" class="screenBlock">			
+			2 segundos / 100 veces / 5 pausa <span class="buttonStart" onclick="setupTimer(2, 100, 5)">timer</span><br>
+			2 segundos / 100 veces / 10 pausa <span class="buttonStart" onclick="setupTimer(2, 100, 10)">timer</span><br>
 			3 segundos / 100 veces / 5 pausa <span class="buttonStart" onclick="setupTimer(3, 100, 5)">timer</span><br>
+			3 segundos / 100 veces / 10 pausa <span class="buttonStart" onclick="setupTimer(3, 100, 10)">timer</span><br>
 			<span class="buttonStart" onclick="startTimer()">iniciar</span><br>
 			<hr>
 			Tiempo <span id="idtime"></span><br>
@@ -145,4 +148,5 @@
 		</script>
 		
 	</body>
+
 </html>
