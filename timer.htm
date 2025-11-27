@@ -1,0 +1,148 @@
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<style>
+			.screenBlock{
+				max-width:1000;
+				margin:auto;
+			}
+			.buttonStart{
+				background:#002040;
+				color:#ffffff;
+				cursor:pointer;
+				display: inline-block;
+				padding:5px 10px;
+			}
+		</style>
+	</head>
+	<body style="color:#ffffff;background:#202020;font:24px Tahoma">
+		<div id="configDiv" style="display:block" class="screenBlock">
+			3 segundos / 10 veces / 3 pausa <span class="buttonStart" onclick="setupTimer(3, 10, 3)">timer</span><br>
+			3 segundos / 100 veces / 5 pausa <span class="buttonStart" onclick="setupTimer(3, 100, 5)">timer</span><br>
+			<span class="buttonStart" onclick="startTimer()">iniciar</span><br>
+			<hr>
+			Tiempo <span id="idtime"></span><br>
+			Veces <span id="idtics"></span><br>
+			Pausa cada <span id="idpause"></span><br>
+		</div>
+		<div id="runnerDiv" class="screenBlock" style="display:none">
+			<canvas id="canvasBoard" width="640" height="480"></canvas><br>
+			<span id="idStopButton" class="buttonStart" onclick="stopTimer()">pausar</span>
+			<span id="idStartButton" style="display:none" class="buttonStart" onclick="startTimer()">iniciar</span>
+			<span class="buttonStart" onclick="returnConfig()">regresar</span>
+			
+		</div>
+		<audio id="idTick" src="mouse-click-3-381775.mp3"></audio>
+		<script>
+			const tickSound = document.getElementById("idTick");
+			var configTime;
+			var configTics;
+			var configPauseTick;
+			var configPauseTime = 2000;
+			var ticks;
+			var status = 0;
+			var running = false;
+			const canvas = document.getElementById("canvasBoard");
+			const ctx = canvas.getContext("2d");
+			var nextTime = 0;
+		
+			function playTick() {
+				tickSound.currentTime = 0;   // rewind so rapid ticks are allowed
+				tickSound.play();
+			}
+		
+			function setupTimer(s, t, p){
+				configTime = s;
+				configTics = t;
+				configPauseTick = p;
+				document.getElementById('idtime').innerHTML = s;
+				document.getElementById('idtics').innerHTML = t;
+				document.getElementById('idpause').innerHTML = p;
+			}
+			
+			function startTimer(){
+				if (configTime==undefined){
+					return;
+				}
+				status = 0;
+				running = true;
+				nextTime = 0;
+				ticks = 0;
+				requestAnimationFrame(appLoop);
+				document.getElementById('configDiv').style.display='none';
+				document.getElementById('runnerDiv').style.display='';
+				document.getElementById('idStartButton').style.display='none';
+				document.getElementById('idStopButton').style.display='';
+			}
+			function returnConfig(){
+				runner = false;
+				document.getElementById('configDiv').style.display='';
+				document.getElementById('runnerDiv').style.display='none';
+			}
+			var text = '';
+			function appLoop(timestamp){				
+				
+				if (!running){
+					return;
+				}				
+				if (nextTime==0){
+					nextTime = timestamp + 1000;
+					text = "3";
+				}else{
+					if (nextTime<timestamp){
+						switch(Number(status)){
+							case 0:
+								text = "3";
+								nextTime += 1000;
+								status = 1;								
+								break;
+							case 1:
+								text = "2";
+								nextTime += 1000;
+								status = 2;								
+								break;
+							case 2:
+								text = "1";
+								nextTime += configTime*1000;
+								status = 3;
+								playTick();
+								ticks++;
+								break;
+							case 3:
+								text = String(ticks+1);
+								ticks++;
+								if (ticks>configTics){
+									text = "Fin";									
+								}else{
+									playTick();
+								}
+								nextTime += configTime*1000;
+								if ((ticks) % configPauseTick==0){
+									console.log('pause added'+ticks);
+									nextTime += configTime*1000 + configPauseTime;
+								}
+								
+								break;
+						}
+					}
+				}
+				ctx.clearRect(0, 0, 640, 480);
+				ctx.textAlign = "left";
+				ctx.font = "bold 100px Verdana";	
+				ctx.fillStyle = "#80ff80";
+				ctx.fillText(text, 320, 240);
+				if (text!="Fin"){
+					requestAnimationFrame(appLoop);
+				}
+			}
+			function stopTimer(){
+				document.getElementById('idStartButton').style.display='';
+				document.getElementById('idStopButton').style.display='none';
+				running = false;
+			}
+			
+			setupTimer(3, 100, 5);
+		</script>
+		
+	</body>
+</html>
