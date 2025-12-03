@@ -36,15 +36,17 @@
 			Pausa cada <span id="idpause"></span><br>
 		</div>
 		<div id="runnerDiv" class="screenBlock" style="display:none">
-			<div id="textBoard" width="100%" height="90%" style="text-align:center;font:bold 100px Verdana"></div>
+			<div id="textBoard" width="100%" height="90%" style="border:1px solid #808080; padding:10px;color:#ffff80;text-align:center;font:bold 100px Verdana"></div>
 			<span id="idStopButton" class="buttonStart" onclick="stopTimer()">pausar</span>
 			<span id="idStartButton" style="display:none" class="buttonStart" onclick="startTimer()">iniciar</span>
 			<span class="buttonStart" onclick="returnConfig()">regresar</span>
 			
 		</div>
 		<audio id="idTick" src="mouse-click-3-381775.mp3"></audio>
+		<audio id="idWin" src="winsound.mp3"></audio>
 		<script>
 			const tickSound = document.getElementById("idTick");
+			const winSound = document.getElementById("idWin");
 			var configTime;
 			var configTics;
 			var configPauseTick;
@@ -58,6 +60,11 @@
 			function playTick() {
 				tickSound.currentTime = 0;   // rewind so rapid ticks are allowed
 				tickSound.play();
+			}
+		
+			function playWin() {
+				winSound.currentTime = 0;   // rewind so rapid ticks are allowed
+				winSound.play();
 			}
 		
 			function setupTimer(s, t, p){
@@ -119,7 +126,8 @@
 								textBoard.innerHTML = String(ticks+1);
 								ticks++;
 								if (ticks>configTics){
-									textBoard.innerHTML = "Fin";									
+									textBoard.innerHTML = "Fin";
+									playWin();
 								}else{
 									playTick();
 								}
