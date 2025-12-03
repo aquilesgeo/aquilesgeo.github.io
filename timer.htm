@@ -3,6 +3,10 @@
 		<title>Workout timer</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<style>
+			td, th {
+				padding:10px;
+				border:1px solid #404040;
+			}
 			.screenBlock{
 				max-width:1000;
 				margin:auto;
@@ -16,12 +20,15 @@
 			}
 		</style>
 	</head>
-	<body style="color:#ffffff;background:#202020;font:24px Tahoma">
+	<body style="color:#ffffff;background:#202020;font:20px Tahoma">
 		<div id="configDiv" style="display:block" class="screenBlock">			
-			2 segundos / 100 veces / 5 pausa <span class="buttonStart" onclick="setupTimer(2, 100, 5)">timer</span><br>
-			2 segundos / 100 veces / 10 pausa <span class="buttonStart" onclick="setupTimer(2, 100, 10)">timer</span><br>
-			3 segundos / 100 veces / 5 pausa <span class="buttonStart" onclick="setupTimer(3, 100, 5)">timer</span><br>
-			3 segundos / 100 veces / 10 pausa <span class="buttonStart" onclick="setupTimer(3, 100, 10)">timer</span><br>
+			<table style="width:100%;border-collapse:collapse">
+				<tr><th>SEGUNDOS</th><th>VECES</th><th>PAUSA</th><th>&nbsp;</th></tr>
+				<tr><td>2</td><td>100</td><td>5</td><td><span class="buttonStart" onclick="setupTimer(2, 100, 5)">timer</span></td></tr>
+				<tr><td>2</td><td>100</td><td>10</td><td><span class="buttonStart" onclick="setupTimer(2, 100, 10)">timer</span></td></tr>
+				<tr><td>3</td><td>100</td><td>5</td><td><span class="buttonStart" onclick="setupTimer(3, 100, 5)">timer</span></td></tr>
+				<tr><td>3</td><td>100</td><td>10</td><td><span class="buttonStart" onclick="setupTimer(3, 100, 10)">timer</span></td></tr>
+			</table>
 			<span class="buttonStart" onclick="startTimer()">iniciar</span><br>
 			<hr>
 			Tiempo <span id="idtime"></span><br>
@@ -29,7 +36,7 @@
 			Pausa cada <span id="idpause"></span><br>
 		</div>
 		<div id="runnerDiv" class="screenBlock" style="display:none">
-			<canvas id="canvasBoard" width="640" height="480"></canvas><br>
+			<div id="textBoard" width="100%" height="90%" style="text-align:center;font:bold 100px Verdana"></div>
 			<span id="idStopButton" class="buttonStart" onclick="stopTimer()">pausar</span>
 			<span id="idStartButton" style="display:none" class="buttonStart" onclick="startTimer()">iniciar</span>
 			<span class="buttonStart" onclick="returnConfig()">regresar</span>
@@ -45,9 +52,8 @@
 			var ticks;
 			var status = 0;
 			var running = false;
-			const canvas = document.getElementById("canvasBoard");
-			const ctx = canvas.getContext("2d");
 			var nextTime = 0;
+			var textBoard = document.getElementById('textBoard');
 		
 			function playTick() {
 				tickSound.currentTime = 0;   // rewind so rapid ticks are allowed
@@ -78,50 +84,47 @@
 				document.getElementById('idStopButton').style.display='';
 			}
 			function returnConfig(){
-				runner = false;
+				running = false;
 				document.getElementById('configDiv').style.display='';
 				document.getElementById('runnerDiv').style.display='none';
 			}
-			var text = '';
 			function appLoop(timestamp){				
-				
 				if (!running){
 					return;
 				}				
 				if (nextTime==0){
 					nextTime = timestamp + 1000;
-					text = "3";
+					textBoard.innerHTML = "3";
 				}else{
 					if (nextTime<timestamp){
 						switch(Number(status)){
 							case 0:
-								text = "3";
+								textBoard.innerHTML = "3";
 								nextTime += 1000;
 								status = 1;								
 								break;
 							case 1:
-								text = "2";
+								textBoard.innerHTML = "2";
 								nextTime += 1000;
 								status = 2;								
 								break;
 							case 2:
-								text = "1";
+								textBoard.innerHTML = "1";
 								nextTime += configTime*1000;
 								status = 3;
 								playTick();
 								ticks++;
 								break;
 							case 3:
-								text = String(ticks+1);
+								textBoard.innerHTML = String(ticks+1);
 								ticks++;
 								if (ticks>configTics){
-									text = "Fin";									
+									textBoard.innerHTML = "Fin";									
 								}else{
 									playTick();
 								}
 								nextTime += configTime*1000;
-								if ((ticks) % configPauseTick==0){
-									console.log('pause added'+ticks);
+								if ((ticks) % configPauseTick==0){									
 									nextTime += configTime*1000 + configPauseTime;
 								}
 								
@@ -129,12 +132,7 @@
 						}
 					}
 				}
-				ctx.clearRect(0, 0, 640, 480);
-				ctx.textAlign = "left";
-				ctx.font = "bold 100px Verdana";	
-				ctx.fillStyle = "#80ff80";
-				ctx.fillText(text, 320, 240);
-				if (text!="Fin"){
+				if (textBoard.innerHTML!="Fin"){
 					requestAnimationFrame(appLoop);
 				}
 			}
