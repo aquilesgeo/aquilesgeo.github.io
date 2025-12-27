@@ -24,10 +24,18 @@
 		<div id="configDiv" style="display:block" class="screenBlock">			
 			<table style="width:100%;border-collapse:collapse">
 				<tr><th>SEGUNDOS</th><th>VECES</th><th>PAUSA</th><th>&nbsp;</th></tr>
-				<tr><td>2</td><td>100</td><td>5</td><td><span class="buttonStart" onclick="setupTimer(2, 100, 5)">timer</span></td></tr>
 				<tr><td>2</td><td>100</td><td>10</td><td><span class="buttonStart" onclick="setupTimer(2, 100, 10)">timer</span></td></tr>
-				<tr><td>3</td><td>100</td><td>5</td><td><span class="buttonStart" onclick="setupTimer(3, 100, 5)">timer</span></td></tr>
+				<tr><td>2</td><td>100</td><td>20</td><td><span class="buttonStart" onclick="setupTimer(2, 100, 20)">timer</span></td></tr>
 				<tr><td>3</td><td>100</td><td>10</td><td><span class="buttonStart" onclick="setupTimer(3, 100, 10)">timer</span></td></tr>
+				<tr><td>3</td><td>100</td><td>20</td><td><span class="buttonStart" onclick="setupTimer(3, 100, 20)">timer</span></td></tr>
+				<tr><td>4</td><td>100</td><td>10</td><td><span class="buttonStart" onclick="setupTimer(4, 100, 10)">timer</span></td></tr>
+				<tr><td>4</td><td>100</td><td>20</td><td><span class="buttonStart" onclick="setupTimer(4, 100, 20)">timer</span></td></tr>
+				<tr><td colspan="4">&nbsp;</td></tr>
+				<tr>
+					<td><input id="inputSeconds" type="text" size="3"></td>
+					<td><input id="inputTimes" type="text" size="3"></td>
+					<td><input id="inputPause" type="text" size="3"></td>
+				<td><span class="buttonStart" onclick="setupTimerCustom()">timer</span></td></tr>
 			</table>
 			<span class="buttonStart" onclick="startTimer()">iniciar</span><br>
 			<hr>
@@ -74,6 +82,18 @@
 				document.getElementById('idtime').innerHTML = s;
 				document.getElementById('idtics').innerHTML = t;
 				document.getElementById('idpause').innerHTML = p;
+				document.getElementById('inputSeconds').value = s;
+				document.getElementById('inputTimes').value = t;
+				document.getElementById('inputPause').value = p;
+			}
+			
+			function setupTimerCustom(){
+				configTime = document.getElementById('inputSeconds').value;
+				configTics = document.getElementById('inputTimes').value;
+				configPauseTick = document.getElementById('inputPause').value;
+				document.getElementById('idtime').innerHTML = configTime;
+				document.getElementById('idtics').innerHTML = configTics;
+				document.getElementById('idpause').innerHTML = configPauseTick;
 			}
 			
 			function startTimer(){
